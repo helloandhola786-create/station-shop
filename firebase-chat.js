@@ -134,32 +134,7 @@ async function ensureCustomerConversation() {
   }
   return { user, conversationRef };
 }
-  if (!user) {
-    const result = await signInAnonymously(auth);
-    user = result.user;
-  }
-  const customer = getShopCustomer() || {};
-  const conversationRef = doc(db, "conversations", user.uid);
-  const snapshot = await getDoc(conversationRef);
-  const details = {
-    customerUid: user.uid,
-    customerName: String(customer.name || "Station Shop customer").slice(0, 80),
-    customerPhone: String(customer.phone || "").slice(0, 20),
-    updatedAt: serverTimestamp()
-  };
-  if (!snapshot.exists()) {
-    await setDoc(conversationRef, {
-      ...details,
-      createdAt: serverTimestamp(),
-      lastMessage: "",
-      lastMessageAt: serverTimestamp()
-    });
-  } else {
-    await updateDoc(conversationRef, details);
-  }
-  return { user, conversationRef };
-}
-
+  
 window.renderChat = async function renderChatFirebase() {
   addChatStyles();
   stopCustomerListener();
